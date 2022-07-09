@@ -45,6 +45,9 @@ public class OrderHeader extends BaseEntity {
     @Embedded
     private Address billToAddress;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
+
     public String getCustomerName() {
         return CustomerName;
     }
@@ -69,6 +72,14 @@ public class OrderHeader extends BaseEntity {
         this.shippingAddress = shippingAddress;
     }
 
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,17 +90,20 @@ public class OrderHeader extends BaseEntity {
 
         if (getCustomerName() != null ? !getCustomerName().equals(that.getCustomerName()) : that.getCustomerName() != null)
             return false;
-        if (shippingAddress != null ? !shippingAddress.equals(that.shippingAddress) : that.shippingAddress != null)
+        if (getShippingAddress() != null ? !getShippingAddress().equals(that.getShippingAddress()) : that.getShippingAddress() != null)
             return false;
-        return billToAddress != null ? billToAddress.equals(that.billToAddress) : that.billToAddress == null;
+        if (getBillToAddress() != null ? !getBillToAddress().equals(that.getBillToAddress()) : that.getBillToAddress() != null)
+            return false;
+        return getOrderStatus() == that.getOrderStatus();
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (getCustomerName() != null ? getCustomerName().hashCode() : 0);
-        result = 31 * result + (shippingAddress != null ? shippingAddress.hashCode() : 0);
-        result = 31 * result + (billToAddress != null ? billToAddress.hashCode() : 0);
+        result = 31 * result + (getShippingAddress() != null ? getShippingAddress().hashCode() : 0);
+        result = 31 * result + (getBillToAddress() != null ? getBillToAddress().hashCode() : 0);
+        result = 31 * result + (getOrderStatus() != null ? getOrderStatus().hashCode() : 0);
         return result;
     }
 }
