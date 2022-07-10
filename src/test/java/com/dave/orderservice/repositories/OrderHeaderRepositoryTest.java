@@ -2,6 +2,9 @@ package com.dave.orderservice.repositories;
 
 import com.dave.orderservice.domain.OrderHeader;
 import com.dave.orderservice.domain.OrderLine;
+import com.dave.orderservice.domain.Product;
+import com.dave.orderservice.domain.ProductStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -21,6 +24,19 @@ public class OrderHeaderRepositoryTest {
     @Autowired
     OrderHeaderRepository orderHeaderRepository;
 
+    @Autowired
+    ProductRepository productRepository;
+
+    Product product;
+
+    @BeforeEach
+    void setUp() {
+        Product newProduct = new Product();
+        newProduct.setProductStatus(ProductStatus.NEW);
+        newProduct.setDescription("test product");
+        product = productRepository.saveAndFlush(newProduct);
+    }
+
     @Test
     void testSaveOrderWithLine() {
         OrderHeader orderHeader = new OrderHeader();
@@ -28,6 +44,7 @@ public class OrderHeaderRepositoryTest {
 
         OrderLine orderLine = new OrderLine();
         orderLine.setQuantityOrdered(5);
+        orderLine.setProduct(product);
 
         orderHeader.setOrderLines(Set.of(orderLine));
         orderLine.setOrderHeader(orderHeader);
@@ -40,6 +57,11 @@ public class OrderHeaderRepositoryTest {
         assertNotNull(savedOrderHeader.getId());
         assertNotNull(savedOrderHeader.getOrderLines());
         assertEquals(savedOrderHeader.getOrderLines().size(), 1);
+
+        OrderHeader fetchedOrder = orderHeaderRepository.getReferenceById(savedOrderHeader.getId());
+
+        assertNotNull(fetchedOrder);
+        assertEquals(fetchedOrder.getOrderLines().size(), 1);
     }
 
     @Test
