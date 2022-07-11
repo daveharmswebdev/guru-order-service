@@ -42,7 +42,8 @@ import java.util.Set;
 })
 public class OrderHeader extends BaseEntity {
 
-    private String CustomerName;
+    @ManyToOne
+    private Customer customer;
     @Embedded
     private Address shippingAddress;
     @Embedded
@@ -63,20 +64,12 @@ public class OrderHeader extends BaseEntity {
         orderLine.setOrderHeader(this);
     }
 
-    public String getCustomerName() {
-        return CustomerName;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCustomerName(String customerName) {
-        CustomerName = customerName;
-    }
-
-    public Address getBillToAddress() {
-        return billToAddress;
-    }
-
-    public void setBillToAddress(Address billToAddress) {
-        this.billToAddress = billToAddress;
+    public void setCustomer(Customer customer) {
+        customer = customer;
     }
 
     public Address getShippingAddress() {
@@ -85,6 +78,14 @@ public class OrderHeader extends BaseEntity {
 
     public void setShippingAddress(Address shippingAddress) {
         this.shippingAddress = shippingAddress;
+    }
+
+    public Address getBillToAddress() {
+        return billToAddress;
+    }
+
+    public void setBillToAddress(Address billToAddress) {
+        this.billToAddress = billToAddress;
     }
 
     public OrderStatus getOrderStatus() {
@@ -103,6 +104,7 @@ public class OrderHeader extends BaseEntity {
         this.orderLines = orderLines;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -111,7 +113,7 @@ public class OrderHeader extends BaseEntity {
 
         OrderHeader that = (OrderHeader) o;
 
-        if (getCustomerName() != null ? !getCustomerName().equals(that.getCustomerName()) : that.getCustomerName() != null)
+        if (getCustomer() != null ? !getCustomer().equals(that.getCustomer()) : that.getCustomer() != null)
             return false;
         if (getShippingAddress() != null ? !getShippingAddress().equals(that.getShippingAddress()) : that.getShippingAddress() != null)
             return false;
@@ -124,7 +126,7 @@ public class OrderHeader extends BaseEntity {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (getCustomerName() != null ? getCustomerName().hashCode() : 0);
+        result = 31 * result + (getCustomer() != null ? getCustomer().hashCode() : 0);
         result = 31 * result + (getShippingAddress() != null ? getShippingAddress().hashCode() : 0);
         result = 31 * result + (getBillToAddress() != null ? getBillToAddress().hashCode() : 0);
         result = 31 * result + (getOrderStatus() != null ? getOrderStatus().hashCode() : 0);
